@@ -1,0 +1,23 @@
+doctype html
+html
+	head
+		title= title
+	body
+		if dirs.length > 0
+			h3 Directories
+			ul
+				for dir in dirs
+					li
+						a(href=`${dir.uri}` style="text-decoration: none;")= dir.name
+
+		if files.length > 0
+			h3 Files
+			ul
+				for file in files
+					li
+						a(href=`${file.uri}` style="text-decoration: none;")= file.name
+
+		a(href=`${uri}` style="text-decoration: none;") Back #[br]
+		a(href='/' style="text-decoration: none;") Home #[br]
+
+
