@@ -39,15 +39,14 @@ async function buildRoot(pre_path, pre_uri, name, depth) {
 
 async function checkForUpdate(rootNode, prefix, rootName) {
 	if (!rootNode) {
-		console.log('updated!!!!!');
 		return newRoot = await buildRoot(prefix, '', rootName, 0);
 	}
 	else{
 		const rootPath = p.join(prefix, rootName);
-		const curr_modify = await Stat(rootPath).mtime;
+		let curr_modify = await Stat(rootPath);
+		curr_modify = curr_modify.mtime;
 		const old_modify = rootNode.mtime;
 		if (curr_modify > old_modify) {
-			console.log('updated!!!!!');
 			return newRoot = await buildRoot(prefix, '', rootName, 0);
 		}
 		return rootNode;
