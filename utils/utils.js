@@ -1,8 +1,12 @@
 const fs = require('fs');
+const p = require('path');
+const { promisify } = require('util');
+const Stat = promisify(fs.stat);
+const Readdir = promisify(fs.readdir);
 
-function build(pre_path, pre_uri, name, depth) {
-	const path = pre_path + '/' + name;
-	const stat = fs.statSync(path);
+async function buildRoot(pre_path, pre_uri, name, depth) {
+	const path = p.join(pre_path, name);
+	const stat = await Stat(path);
 	let node = {};
 	if (stat.isDirectory()) {
 		node.name = name;
@@ -10,6 +14,7 @@ function build(pre_path, pre_uri, name, depth) {
 		node.path = path;
 		if (depth == 0) {
 			node.uri = '/';
+			node.mtime = stat.mtime;
 		}
 		else if (depth == 1) {
 			node.uri = pre_uri + name;
@@ -18,9 +23,9 @@ function build(pre_path, pre_uri, name, depth) {
 			node.uri = pre_uri + '/' + name;
 		}
 		node.content = [];
-		const dir_node = fs.readdirSync(path);
-		dir_node.forEach(element => {
-			node.content.push(build(path, node.uri, element, depth + 1));
+		const dir_node = await Readdir(path);
+		dir_node.forEach(async fileName => {
+			node.content.push(await buildRoot(path, node.uri, fileName, depth + 1));
 		});
 	}
 	else if (stat.isFile()) {
@@ -32,4 +37,22 @@ function build(pre_path, pre_uri, name, depth) {
 	return node;
 }
 
-module.exports.build = build;
+async function checkForUpdate(rootNode, prefix, rootName) {
+	if (!rootNode) {
+		console.log('updated!!!!!');
+		return newRoot = await buildRoot(prefix, '', rootName, 0);
+	}
+	else{
+		const rootPath = p.join(prefix, rootName);
+		const curr_modify = await Stat(rootPath).mtime;
+		const old_modify = rootNode.mtime;
+		if (curr_modify > old_modify) {
+			console.log('updated!!!!!');
+			return newRoot = await buildRoot(prefix, '', rootName, 0);
+		}
+		return rootNode;
+	}
+}
+
+module.exports.build = buildRoot;
+module.exports.checkForUpdate = checkForUpdate;

@@ -1,9 +1,15 @@
-const { build } = require('../utils/utils');
+// enviroment variables
+const APP_PATH = process.env.APP_PATH;
+const ROOT_PATH = process.env.ROOT_PATH;
+const ROOT_NAME = process.env.ROOT_NAME;
+
+const path = require('path');
 const url = require('url');
 const express = require('express');
 const router = express.Router();
+const { build, checkForUpdate } = require(path.join(APP_PATH, 'utils', 'utils.js'));
 
-let root = build(process.cwd(), '', 'public', 0);
+let root;
 
 function checkUrl(url) {
 	let list = url.split("/");
@@ -24,11 +30,9 @@ function checkUrl(url) {
 	return pointer;
 }
 
-router.get('/first_template', (req, res) => {
-	res.render('first_view');
-});
-
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+	root = await checkForUpdate(root, ROOT_PATH, ROOT_NAME);
+	console.log(root);
 	const params = {
 		title: root.name,
 		uri: root.uri,
@@ -38,7 +42,8 @@ router.get('/', (req, res) => {
 	res.render('file', params);
 });
 
-router.use((req, res) => {
+router.use(async (req, res) => {
+	root = await checkForUpdate(root, ROOT_PATH, ROOT_NAME);
 	const result = checkUrl(req.url);
 	if (result && result.type === 'dir') {
 		pre_uri = result.uri;
