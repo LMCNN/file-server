@@ -8,7 +8,7 @@ const path = require('path');
 const url = require('url');
 const express = require('express');
 const router = express.Router();
-const { build, checkForUpdate } = require(path.join(APP_PATH, 'utils', 'utils.js'));
+const { build } = require(path.join(APP_PATH, 'utils', 'utils.js'));
 
 const root_path = path.join(ROOT_PATH, ROOT_NAME);
 let root;

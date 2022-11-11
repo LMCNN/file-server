@@ -37,21 +37,5 @@ async function buildRoot(pre_path, pre_uri, name, depth) {
 	return node;
 }
 
-async function checkForUpdate(rootNode, prefix, rootName) {
-	if (!rootNode) {
-		return newRoot = await buildRoot(prefix, '', rootName, 0);
-	}
-	else{
-		const rootPath = p.join(prefix, rootName);
-		let curr_modify = await Stat(rootPath);
-		curr_modify = curr_modify.mtime;
-		const old_modify = rootNode.mtime;
-		if (curr_modify > old_modify) {
-			return newRoot = await buildRoot(prefix, '', rootName, 0);
-		}
-		return rootNode;
-	}
-}
-
 module.exports.build = buildRoot;
 module.exports.checkForUpdate = checkForUpdate;
