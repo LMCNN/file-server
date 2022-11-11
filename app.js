@@ -22,7 +22,7 @@ app.set('views', path.join(APP_PATH, 'views'));
 
 // use third party middleware
 app.use(express.static(ROOT_PATH));
-app.use(morgan('tiny'));
+app.use(morgan(':remote-addr :method :url :response-time ms [:date]'));
 app.use(favicon(path.join(APP_PATH, 'favicon.ico')));
 
 // use routes
