@@ -38,4 +38,3 @@ async function buildRoot(pre_path, pre_uri, name, depth) {
 }
 
 module.exports.build = buildRoot;
-module.exports.checkForUpdate = checkForUpdate;
