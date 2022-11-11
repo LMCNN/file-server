@@ -21,7 +21,6 @@ initRoot();
 
 chokidar.watch(root_path).on('all', async (event, path) => {
 	root = await build(ROOT_PATH, '', ROOT_NAME, 0);
-	console.log(event, path);
 });
 
 function checkUrl(url) {
