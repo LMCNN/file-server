@@ -12,7 +12,7 @@ const { build } = require(path.join(APP_PATH, 'utils', 'utils.js'));
 
 let root;
 
-(async function() { await build(ROOT_PATH, '', ROOT_NAME, 0); })();
+(async function() { root = await build(ROOT_PATH, '', ROOT_NAME, 0); })();
 
 chokidar.watch(ROOT_NAME).on('all', async (event, path) => {
 	root = await build(ROOT_PATH, '', ROOT_NAME, 0);
