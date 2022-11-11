@@ -1,6 +1,7 @@
 // global variables
 const APP_PATH = process.env.APP_PATH;
 const ROOT_PATH = process.env.ROOT_PATH;
+const ROOT_NAME = process.env.ROOT_NAME;
 
 // load express
 const express = require('express');
@@ -21,7 +22,7 @@ app.set('view engine', 'pug');
 app.set('views', path.join(APP_PATH, 'views'));
 
 // use third party middleware
-app.use(express.static(ROOT_PATH));
+app.use(express.static(path.join(ROOT_PATH, ROOT_NAME)));
 app.use(morgan('common'));
 app.use(favicon(path.join(APP_PATH, 'favicon.ico')));
 

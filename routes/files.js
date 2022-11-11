@@ -14,7 +14,8 @@ let root;
 
 (async function() { root = await build(ROOT_PATH, '', ROOT_NAME, 0); })();
 
-chokidar.watch(ROOT_NAME).on('all', async (event, path) => {
+root_path = path.join(ROOT_PATH, ROOT_NAME);
+chokidar.watch(root_path).on('all', async (event, path) => {
 	root = await build(ROOT_PATH, '', ROOT_NAME, 0);
 });
 
