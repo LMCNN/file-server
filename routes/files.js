@@ -3,13 +3,26 @@ const APP_PATH = process.env.APP_PATH;
 const ROOT_PATH = process.env.ROOT_PATH;
 const ROOT_NAME = process.env.ROOT_NAME;
 
+const chokidar = require('chokidar');
 const path = require('path');
 const url = require('url');
 const express = require('express');
 const router = express.Router();
 const { build, checkForUpdate } = require(path.join(APP_PATH, 'utils', 'utils.js'));
 
+const root_path = path.join(ROOT_PATH, ROOT_NAME);
 let root;
+
+async function initRoot() {
+	root = await build(ROOT_PATH, '', ROOT_NAME, 0);
+}
+
+initRoot();
+
+chokidar.watch(root_path).on('all', async (event, path) => {
+	root = await build(ROOT_PATH, '', ROOT_NAME, 0);
+	console.log(event, path);
+});
 
 function checkUrl(url) {
 	let list = url.split("/");
@@ -31,8 +44,6 @@ function checkUrl(url) {
 }
 
 router.get('/', async (req, res) => {
-	root = await checkForUpdate(root, ROOT_PATH, ROOT_NAME);
-	console.log(root);
 	const params = {
 		title: root.name,
 		uri: root.uri,
@@ -43,7 +54,6 @@ router.get('/', async (req, res) => {
 });
 
 router.use(async (req, res) => {
-	root = await checkForUpdate(root, ROOT_PATH, ROOT_NAME);
 	const result = checkUrl(req.url);
 	if (result && result.type === 'dir') {
 		pre_uri = result.uri;
