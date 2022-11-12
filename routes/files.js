@@ -65,9 +65,8 @@ router.use(async (req, res) => {
 		res.render('file', params);
 	}
 	else {
-		res.send(result);
+		res.status(400).end('GO AWAY, THEIF!')
 	}
-	res.end();
 });
 
 module.exports = router;
